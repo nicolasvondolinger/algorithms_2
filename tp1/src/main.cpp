@@ -1,7 +1,7 @@
 #include "../include/Trie.hpp"
 #include "../include/TrieNode.hpp"
 
-#define _ ios_base::sync_with_stdio(0);cin.tie(0);
+#define _ ios_base::sync_with_stdio(0); cin.tie(0);
 #define ff first
 #define ss second
 #define pb push_back
@@ -16,6 +16,7 @@ int main(){
     Trie trie;
     // Insert words
     trie.insert("facebook");
+    trie.insert("facebooks");
     trie.insert("face");
     trie.insert("this");
     trie.insert("there");
@@ -28,9 +29,9 @@ int main(){
     // are present or not
     cout << boolalpha;
     cout << trie.search("there") << endl;
-    cout << trie.search("there") << endl;
+    cout << trie.search("facebook") << endl;
     cout << trie.startsWith("th") << endl;
-    cout << trie.startsWith("fab") << endl;
+    cout << trie.startsWith("fa") << endl;
 
     return 0;
 }

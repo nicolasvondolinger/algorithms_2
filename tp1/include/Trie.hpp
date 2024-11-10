@@ -19,4 +19,4 @@ class Trie{
         bool startsWith(string prefix);
 };
 
-#endif // TRIE_HPP
+#endif 

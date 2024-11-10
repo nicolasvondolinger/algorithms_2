@@ -1,7 +1,6 @@
 #include "../include/Trie.hpp"
 
-string Trie::strCopy(string str, int index){
-    
+string Trie::strCopy(string str, int index){  
     return str.substr(index, str.size() - index);
 }
 
@@ -64,11 +63,11 @@ void Trie::insert(string word) {
     }
     
     // Inserção final se não houver rótulos conflitantes
-    if (i < word.size()) {
+    /**if (i < word.size()) {
         TrieNode* temp = new TrieNode();
         temp->value = strCopy(word, i);
         trav->children[word[i] - 'a'] = temp;
-    } 
+    } **/
 }
 
 void Trie::print(){
@@ -85,16 +84,19 @@ bool Trie::search(string word) {
         int j = 0;
 
         while (i < word.size() && j < label.size()) {
-            if (word[i] != label[j]) return false;
+            if (word[i] != label[j]){
+                cout << word[i] << " " << label[j] << endl;
+                return false;
+            }
             i++;
             j++;
         }
 
-        if (j == label.size() && i < word.size()) {
+        if (j == label.size() && i < word.size()){
             trav = trav->children[index];
-        } else {
-            return false;
-        }
+        } else if(j == label.size() && i == word.size()) return true;
+        else return false;
+        
     }
 
     return i == word.size();
