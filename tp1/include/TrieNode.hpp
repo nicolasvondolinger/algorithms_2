@@ -14,10 +14,10 @@ class TrieNode{
         **/
     public:
         int key;
+        string value;
         vector<TrieNode*> children;
-        vector<string> edgeLabel;
         bool isEnd;
-        TrieNode(bool isEnd);
+        TrieNode(bool end);
 };
 
 #endif // TRIENODE_HPP

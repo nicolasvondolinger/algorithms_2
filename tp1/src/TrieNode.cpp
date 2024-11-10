@@ -1,6 +1,7 @@
 #include "../include/TrieNode.hpp"
 
-TrieNode::TrieNode(bool isEnd){
+TrieNode::TrieNode(bool end){
+    isEnd = end;
+    value = "";
     children.resize(SYMBOLS, nullptr);
-    edgeLabel.resize(SYMBOLS);
 }

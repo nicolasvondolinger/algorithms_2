@@ -13,8 +13,6 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fll;
 
 int main(){
 
-    cout << 1 << endl;
-
     Trie trie;
     // Insert words
     trie.insert("facebook");
