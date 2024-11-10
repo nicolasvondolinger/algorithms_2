@@ -1,7 +1,6 @@
 #include "../include/TrieNode.hpp"
 
-TrieNode::TrieNode(bool end){
-    isEnd = end;
+TrieNode::TrieNode(){
     value = "";
     children.resize(SYMBOLS, nullptr);
 }

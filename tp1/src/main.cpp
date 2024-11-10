@@ -28,7 +28,7 @@ int main(){
     // are present or not
     cout << boolalpha;
     cout << trie.search("there") << endl;
-    cout << trie.search("therein") << endl;
+    cout << trie.search("there") << endl;
     cout << trie.startsWith("th") << endl;
     cout << trie.startsWith("fab") << endl;
 

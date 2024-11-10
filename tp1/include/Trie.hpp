@@ -9,7 +9,6 @@ using namespace std;
 class Trie{
     private:
         TrieNode* root;
-        char CASE;
         string strCopy(string str, int index);
         void printUntil(TrieNode* node, string str);
     public:
