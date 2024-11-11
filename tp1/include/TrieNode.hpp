@@ -9,7 +9,7 @@ class TrieNode{
     private: 
         static const int SYMBOLS = 26;
     public:
-        int key;
+        int id;
         string value;
         vector<TrieNode*> children;
         TrieNode();

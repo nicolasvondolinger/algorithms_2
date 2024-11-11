@@ -12,11 +12,13 @@ class Trie{
         string strCopy(string str, int index);
         void printUntil(TrieNode* node, string str);
     public:
+        vector<string> words;
         Trie();
         void insert(string word);
         void print();
-        bool search(string word);
+        pair<bool, int> search(string word);
         bool startsWith(string prefix);
+        int insertCount = 0;
 };
 
 #endif 

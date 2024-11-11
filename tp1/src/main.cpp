@@ -16,11 +16,11 @@ int main(){
     Trie trie;
     // Insert words
     trie.insert("facebook");
-    trie.insert("facebooks");
-    trie.insert("face");
+    trie.insert("facelook");
     trie.insert("this");
-    trie.insert("there");
     trie.insert("then");
+    trie.insert("there");
+    
 
     // Print inserted words
     trie.print();
@@ -28,10 +28,11 @@ int main(){
     // Check if these words
     // are present or not
     cout << boolalpha;
-    cout << trie.search("there") << endl;
-    cout << trie.search("facebook") << endl;
-    cout << trie.startsWith("th") << endl;
-    cout << trie.startsWith("fa") << endl;
+    cout << trie.search("facebook").second << endl;
+    cout << trie.search("facelook").second << endl;
+    cout << trie.search("this").second << endl;
+    cout << trie.search("face").second << endl;
+    cout << trie.search("there").second << endl;
 
     return 0;
 }
