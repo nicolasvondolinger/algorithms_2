@@ -9,16 +9,19 @@ using namespace std;
 class Trie{
     private:
         TrieNode* root;
-        string strCopy(string str, int index);
-        void printUntil(TrieNode* node, string str);
+        void printEachWord(TrieNode* node, string str);
+        void printEachNode(TrieNode* node, int level);
+        string stringToBinary(string word);
+        string binaryToString(string word);
     public:
-        vector<string> words;
         Trie();
+        int insertCount = 0;
         void insert(string word);
-        void print();
+        void print(int choice);
+        void remove(string word);
+        void setUpTrie();
         pair<bool, int> search(string word);
         bool startsWith(string prefix);
-        int insertCount = 0;
 };
 
 #endif 

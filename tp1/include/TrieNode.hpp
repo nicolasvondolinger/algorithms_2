@@ -6,8 +6,6 @@
 using namespace std;
 
 class TrieNode{
-    private: 
-        static const int SYMBOLS = 26;
     public:
         int id;
         string value;

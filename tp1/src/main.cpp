@@ -11,28 +11,44 @@ typedef long long ll;
 const int INF = 0x3f3f3f3f;
 const ll LINF = 0x3f3f3f3f3f3f3f3fll;
 
+void setUpMap(map<string, int>& mp){
+    string str;
+    int count = 0;
+    for(char c = 'a'; c <= 'z'; c++){
+        str = c;
+        mp[str] = count; count++;
+    }
+}
+
 int main(){
 
-    Trie trie;
-    // Insert words
-    trie.insert("facebook");
-    trie.insert("facelook");
-    trie.insert("this");
-    trie.insert("then");
-    trie.insert("there");
+    Trie trie; trie.setUpTrie();
+    map<string, int> mp; setUpMap(mp);
+    string word; vector<string> words;
+    while(cin >> word) words.pb(word);
     
+    string p = "", ans1 = "", ans2 = "";
+    int count = 26;
+    cout << words[0] << endl;
+    for(int i = 0; i < words.size(); i++){
+        for(int j = 0; j < words[i].size(); j++){
+            string c = ""; c += words[i][j];
+            if(trie.search(p + c).ff){ 
+                p += c;
+            } else {
+                ans1 += to_string(trie.search(p).ss); ans2 += to_string(mp[p]);
+                ans1+= '-'; ans2 += '-';
+                trie.insert(p + c); mp[p+c] = count; count++; 
+                p = c;
+            }
+        }
+        ans1 += to_string(trie.search(p).ss); ans2 += to_string(mp[p]);      
+    }
 
-    // Print inserted words
-    trie.print();
+    cout << ans1 << endl;
+    cout << ans2 << endl;
 
-    // Check if these words
-    // are present or not
-    cout << boolalpha;
-    cout << trie.search("facebook").second << endl;
-    cout << trie.search("facelook").second << endl;
-    cout << trie.search("this").second << endl;
-    cout << trie.search("face").second << endl;
-    cout << trie.search("there").second << endl;
+    //trie.print(1);
 
     return 0;
 }

@@ -3,5 +3,5 @@
 TrieNode::TrieNode(){
     id = -1;
     value = "";
-    children.resize(SYMBOLS, nullptr);
+    children.resize(2, nullptr);
 }
