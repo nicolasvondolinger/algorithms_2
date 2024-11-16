@@ -7,7 +7,7 @@ using namespace std;
 
 class TrieNode{
     public:
-        int id;
+        string id;
         string value;
         vector<TrieNode*> children;
         TrieNode();

@@ -13,14 +13,19 @@ class Trie{
         void printEachNode(TrieNode* node, int level);
         string stringToBinary(string word);
         string binaryToString(string word);
+        void increaseInsertCount();
+        void deleteTrie(TrieNode* node);
     public:
         Trie();
-        int insertCount = 0;
-        void insert(string word);
+        ~Trie();
+        string insertCount = "0";
+        void insertEncoding(string word);
+        void insertDecoding(string word, string id);
         void print(int choice);
         void remove(string word);
-        void setUpTrie();
-        pair<bool, int> search(string word);
+        void setUpTrieEncoding();
+        void setUpTrieDecoding();
+        pair<bool, string> search(string word);
         bool startsWith(string prefix);
 };
 
