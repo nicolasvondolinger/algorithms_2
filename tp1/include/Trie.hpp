@@ -12,7 +12,6 @@ class Trie{
         void printEachWord(TrieNode* node, string str);
         void printEachNode(TrieNode* node, int level);
         string stringToBinary(string word);
-        string binaryToString(string word);
         void increaseInsertCount();
         void deleteTrie(TrieNode* node);
     public:
@@ -26,7 +25,6 @@ class Trie{
         void setUpTrieEncoding();
         void setUpTrieDecoding();
         pair<bool, string> search(string word);
-        bool startsWith(string prefix);
 };
 
 #endif 

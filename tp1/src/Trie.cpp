@@ -8,16 +8,14 @@ Trie::~Trie(){
     deleteTrie(root);
 }
 
-void Trie::deleteTrie(TrieNode* node){
-            
+void Trie::deleteTrie(TrieNode* node){        
     if (node == nullptr) return;
     
     for (TrieNode* child : node->children) {
         deleteTrie(child);
     }
             
-    delete node;
-        
+    delete node;       
 }
 
 void Trie::setUpTrieEncoding(){
@@ -27,7 +25,6 @@ void Trie::setUpTrieEncoding(){
 }
 
 void Trie::setUpTrieDecoding(){
-    string str;
     for(int i = 0; i < 256; i++){
         this->insertDecoding(to_string(i), string(1, static_cast<char>(i)));
     }
@@ -199,6 +196,39 @@ void Trie::insertDecoding(string word, string id){
     }
 }
 
+void Trie::remove(string word){
+    word = stringToBinary(word);
+    TrieNode* node = root; int i = 0;
+    while (i < word.size()) {
+        int inicial = i, index = (word[i] == '0') ? 0 : 1;
+        
+        if(node->children[index] == nullptr){
+            cout << "Palavra não encontrada." << endl;
+            return;
+        }
+        
+        int j = 0; string label = node->children[index]->value; 
+        
+        if(label == word.substr(inicial)) {
+            if(node->children[index]->id == "-1"){
+                cout << "Palavra não encontrada." << endl; return;
+            }
+            node->children[index]->id = "-1";
+            if(node->children[index]->children[0] == nullptr && 
+            node->children[index]->children[1] == nullptr) node->children[index] = nullptr;
+            cout << "Palavra removida" << endl; return;
+        }
+
+        while (i < word.size() && j < label.size() && word[i] == label[j]) {i++; j++;}
+        
+        if (i == word.size() && j < label.size()) {
+            cout << "Palavra não encontrada." << endl; return;
+        } else if(i < word.size() && j < label.size()){    
+            cout << "Palavra não encontrada." << endl; return;
+        } else if(i < word.size() && j == label.size()) node = node->children[index];
+    }
+}
+
 void Trie::print(int choice){
     if(choice == 0) printEachWord(root, "");
     else printEachNode(root, 1);
@@ -226,26 +256,4 @@ pair<bool, string> Trie::search(string word) {
         } else return {false, "-1"};
     }
     return {false, "-1"};
-}
-
-bool Trie::startsWith(string prefix) {
-    int i = 0;
-    TrieNode* trav = root;
-
-    while (i < prefix.size() && !trav->children[prefix[i] - 'a']->value.empty()) {
-        int index = prefix[i] - 'a';
-        string label = trav->children[index]->value;
-        int j = 0;
-
-        while (i < prefix.size() && j < label.size()) {
-            if (prefix[i] != label[j]) return false;
-            i++; j++;
-        }
-
-        if (j == label.size() && i <= prefix.size()) {
-            trav = trav->children[index];
-        }
-    }
-
-    return i == prefix.size();
 }
