@@ -30,6 +30,7 @@ void writeBinaryFile(const string& filename, const string& binaryData) {
     }
 
     file.close();
+    cout << "Codificação em binário salva em 'compressed.bin'" << endl;
 }
 
 string lzw_encoding(string& inputLine) {
@@ -112,14 +113,13 @@ int main() {
     }
 
     // Codifica a string inteira
-    ans = lzw_encoding(inputText);
-    writeBinaryFile("compressed.bin", ans);  // Escreve o arquivo binário
+    ans = lzw_encoding(inputText); writeBinaryFile("compressed.bin", ans);  // Escreve o arquivo binário
 
     // Decodifica a string codificada
     ans = lzw_decoding(ans);
 
     // Escreve o resultado da decodificação em um arquivo de texto
-    ofstream outFile("output.txt");  // Abre o arquivo de saída para escrita
+    ofstream outFile("decompressed.txt");  // Abre o arquivo de saída para escrita
 
     if (outFile) {
         outFile << ans;  // Escreve o conteúdo de ans no arquivo de texto
@@ -127,7 +127,7 @@ int main() {
     } else cerr << "Erro ao abrir o arquivo para escrita." << endl;
     
     // Imprime mensagem indicando sucesso
-    cout << "Decodificação salva em 'output.txt'" << endl;
+    cout << "Decodificação salva em 'decompressed.txt'" << endl;
 
     return 0;
 }
