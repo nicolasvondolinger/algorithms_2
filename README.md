@@ -38,15 +38,20 @@ Além do algoritmo principal, foram desenvolvidos scripts para capturar métrica
 
 Para executar esse programa em específico, siga o seguinte passo a passo:
 
-    - Executar o programa no terminal:
+ - Executar o programa no terminal:
 
             $ make run INPUT_FILE=./tests/test.txt
             
+            $ make run INPUT_FILE=./tests/test.txt ARGS="-v -s"
+
             $ make run INPUT_FILE=./tests/test.txt ARGS="-v"
 
-        Observe que, esse trabalho em específico pode ser executado de duas formas diferentes: com o número de códigos inseridos fixo (primeira opção) ou com o número variando (segunda opção). 
-        Para adicionar novos testes, basta inserir no diretório "./testes"
+            $ make run INPUT_FILE=./tests/test.txt ARGS="-s"
 
-     - Limpar arquivos de compilação criados:
+    Observe que, esse trabalho em específico pode ser executado de duas formas diferentes: com o número de códigos inseridos fixo (primeira opção), com o número variando e estatísticas(segunda opção), com o número variando(terceira opção) e com o número fixo e as estatísticas(quarta opção). 
+
+    Para adicionar novos testes, basta inserir o arquivo de entrada no diretório "./testes"
+
+ - Limpar arquivos de compilação criados:
 
             $ make clean
