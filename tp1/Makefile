@@ -29,8 +29,12 @@ $(BIN_DIR):
 
 # Executar o programa
 run: all
-	@if [ "$(findstring -v,$(ARGS))" ]; then \
+	@if [ "$(ARGS)" = "-v" ]; then \
 		./$(TARGET) $(INPUT_FILE) -v; \
+	elif [ "$(ARGS)" = "-s" ]; then \
+		./$(TARGET) $(INPUT_FILE) -s; \
+	elif [ "$(ARGS)" = "-v -s" ] || [ "$(ARGS)" = "-s -v" ]; then \
+		./$(TARGET) $(INPUT_FILE) -v -s; \
 	else \
 		./$(TARGET) $(INPUT_FILE); \
 	fi

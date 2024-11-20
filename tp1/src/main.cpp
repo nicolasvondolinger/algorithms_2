@@ -5,7 +5,7 @@
 #define ff first
 #define ss second
 #define pb push_back
-     
+
 typedef long long ll;
 
 const int INF = 0x3f3f3f3f;
@@ -13,8 +13,13 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fll;
 
 string type = "";
 
-vector<int> bitsUsed (4, 0);
+vector<int> bitsUsed(4, 0);
 
+/*!
+ * @brief       Writes the binary data into a binary file.
+ * @param       binaryData  String containing binary data to be saved.
+ * @return      None.
+ */
 void writeBinaryFile(string& binaryData) {
     ofstream file("compressed.bin", std::ios::binary);
 
@@ -25,146 +30,116 @@ void writeBinaryFile(string& binaryData) {
 
     for (size_t i = 0; i < binaryData.size(); i += 16) {
         string block;
-        if(i+16 < binaryData.size()) block = binaryData.substr(i, 16);
-        else block = binaryData.substr(i, binaryData.size()-i);
+        if (i + 16 < binaryData.size()) block = binaryData.substr(i, 16);
+        else block = binaryData.substr(i, binaryData.size() - i);
         int16_t number = stoi(block, nullptr, 2);
-        file.write(reinterpret_cast<const char*>(&number), sizeof(number));    
+        file.write(reinterpret_cast<const char*>(&number), sizeof(number));
     }
 
     file.close();
     cout << "Codificação em binário salva em 'compressed.bin'" << endl;
 }
 
+/*!
+ * @brief       Encodes the input text using the LZW algorithm.
+ * @param       inputText   Vector containing the input text as strings of bits.
+ * @param       encodingTrie Trie used for encoding the input.
+ * @return      Encoded binary string.
+ */
 string lzw_encoding(vector<string>& inputText, Trie& encodingTrie) { 
     string p = "", ans = "", ans2 = "", ans3 = "";
-    int currentId = 256; // Começa após os 256 códigos ASCII.
-    int tempNumBits = encodingTrie.numBits; // Número inicial de bits (8 ou 12).
-    
-    int maxId = pow(2, 12); // Limite máximo de IDs (12 bits).
+    int currentId = 256; // Starts after ASCII codes.
+    int tempNumBits = encodingTrie.numBits; 
+    int maxId = pow(2, 12);
 
     for (int i = 0; i < inputText.size(); i++) {
-        string c = inputText[i]; // Converte o caractere atual para 8 bits binários.
+        string c = inputText[i];
         
-        // Verifica se a combinação p + c já está na árvore trie.
         if (encodingTrie.search(p + c).first) { 
-            p += c; // Atualiza o prefixo.
+            p += c; 
         } else {
-            // Obtém o código binário do prefixo `p` existente na trie.
             string codeStr = encodingTrie.search(p).second; 
             bitset<12> code(stoi(codeStr)); 
-            string temp = code.to_string().substr(12 - tempNumBits); // Ajusta para o número atual de bits.
+            string temp = code.to_string().substr(12 - tempNumBits); 
+            ans += temp;
 
-            ans += temp; // Adiciona o código binário à resposta.
-            ans3 += codeStr + " "; // Adiciona o código inteiro à string de depuração.
-
-            // Se o ID atual está abaixo do limite máximo, insere a nova sequência na trie.
             if (currentId < maxId) {
-                encodingTrie.insert(p + c, to_string(currentId)); // Insere `p+c` na trie com o novo ID.
-                currentId++; // Incrementa o ID atual.
-                if(tempNumBits == 9)
-                    bitsUsed[0]++;
-                else if(tempNumBits == 10)
-                    bitsUsed[1]++;
-                else if (tempNumBits == 11)
-                    bitsUsed[2]++;
-                else if (tempNumBits == 12)
-                    bitsUsed[3]++;
-                // Ajusta o número de bits dinamicamente, se necessário.
+                encodingTrie.insert(p + c, to_string(currentId));
+                currentId++;
+                bitsUsed[tempNumBits - 9]++;
                 if (currentId > pow(2, tempNumBits) && tempNumBits < 12) {
                     tempNumBits++;
                 }
             }
-
-            p = c; // Atualiza `p` para o caractere atual.
+            p = c;
         }
     }
 
-    // Adiciona o código do último prefixo `p`.
     string codeStr = encodingTrie.search(p).second;
     bitset<12> code(stoi(codeStr)); 
     ans += code.to_string().substr(12 - tempNumBits); 
-    ans3 += codeStr + " "; // Adiciona o último código inteiro à string de depuração.
-    ans2 += p; // Opcional: Adiciona os últimos caracteres codificados para exibição.
-
-    if(tempNumBits == 9) bitsUsed[0]++;
-    else if(tempNumBits == 10) bitsUsed[1]++;
-    else if (tempNumBits == 11) bitsUsed[2]++;
-    else if (tempNumBits == 12) bitsUsed[3]++;
-
-    return ans; // Retorna a string codificada em binário.
+    bitsUsed[tempNumBits - 9]++;
+    return ans;
 }
 
+/*!
+ * @brief       Decodes a binary string using the LZW algorithm.
+ * @param       phrase       Encoded binary string.
+ * @param       decodingTrie Trie used for decoding.
+ * @return      Decoded text.
+ */
 string lzw_decoding(string& phrase, Trie& decodingTrie) {
-    string ans = "", c = ""; // String decodificada e primeiro caractere.
-    int currentId = 256;     // Próximo ID disponível no dicionário.
+    string ans = "", c = ""; 
+    int currentId = 256;
+    int bitIndex = 0; 
+    if (bitsUsed[0] == 0) bitIndex = 3;
+    int numBits = (bitIndex == 0) ? 9 : 12;
+    bitsUsed[bitIndex]--;
 
-    // Obtém o primeiro código usando o número inicial de bits (bitsUsed[0]).
-    int bitIndex = 0; // Índice no vetor bitsUsed.
-    if(bitsUsed[0] == 0) bitIndex = 3;
-    int numBits; 
-    if(bitIndex == 0) numBits = 9;
-    else numBits = 12;
-    bitsUsed[bitIndex]--; // Número de bits inicial.
     string old = phrase.substr(0, numBits); 
-    phrase = phrase.substr(numBits); // Remove o prefixo processado da frase.
-
-    // Procura o código na Trie. Se não encontrar, o dado inicial está incorreto.
+    phrase = phrase.substr(numBits);
     string oldStr = decodingTrie.search(old).second;
     if (oldStr.empty()) throw runtime_error("Erro: Código inicial não encontrado na Trie.");
-    
-    ans += oldStr; // Adiciona a string decodificada ao resultado.
-    c = oldStr[0]; // Define o primeiro caractere para referência.
+    ans += oldStr;
+    c = oldStr[0];
 
-    // Processa o restante da frase.
     while (!phrase.empty()) {
-
-        // Incrementa o índice no vetor bitsUsed e ajusta o número de bits atual.
-        while(bitsUsed[bitIndex] == 0) {
+        while (bitsUsed[bitIndex] == 0) {
             bitIndex++;
-            if(bitIndex == 1) numBits = 10;
-            else if(bitIndex == 2) numBits = 11;
-            else numBits = 12;
+            numBits = (bitIndex == 1) ? 10 : (bitIndex == 2) ? 11 : 12;
         }
 
-        // Obtém o próximo código da entrada.
-        if (phrase.size() < numBits) {
-            throw runtime_error("Erro: Número de bits insuficiente na string de entrada.");
-        }
-
+        if (phrase.size() < numBits) throw runtime_error("Erro: Número de bits insuficiente na string de entrada.");
         string atual = phrase.substr(0, numBits);
-        phrase = phrase.substr(numBits); // Remove o prefixo processado.
+        phrase = phrase.substr(numBits);
 
-        string entry = ""; // Sequência correspondente ao código atual.
+        string entry = decodingTrie.search(atual).first ? decodingTrie.search(atual).second : oldStr + c;
+        ans += entry;
 
-        // Verifica se o código existe na Trie.
-        if (decodingTrie.search(atual).first) {
-            entry = decodingTrie.search(atual).second; // Recupera a sequência.
-        } else {
-            // Caso especial: código não encontrado, segue a regra do LZW.
-            entry = oldStr + c;
-        }
-
-        ans += entry; // Adiciona a sequência decodificada ao resultado.
-
-        // Atualiza o dicionário com a nova entrada.
-        if (currentId < pow(2, 12)) { // Garante que não ultrapassamos 12 bits.
-            string aux = bitset<12>(currentId).to_string(); // Converte ID atual para binário.
-            aux = aux.substr(12 - numBits); // Ajusta para o número atual de bits.
+        if (currentId < pow(2, 12)) {
+            string aux = bitset<12>(currentId).to_string().substr(12 - numBits);
             bitsUsed[bitIndex]--;
-            decodingTrie.insert(aux, oldStr + entry[0]); // Insere o novo código.
-            currentId++; // Incrementa o próximo ID disponível.
+            decodingTrie.insert(aux, oldStr + entry[0]);
+            currentId++;
         }
 
-        // Atualiza `oldStr` e `c` para a próxima iteração.
         oldStr = entry;
         c = entry[0];
     }
 
-    return ans; // Retorna a string decodificada.
+    return ans;
 }
 
-//csvFile << "Arquivo de Entrada,Arquivo de Saída,Taxa de Compressão (%),Tempo de Execução (s)," "Tamanho do Dicionário,Bits Usados (9),Bits Usados (10),Bits Usados (11),Bits Usados (12)\n";
-
+/*!
+ * @brief       Saves compression statistics to a CSV file.
+ * @param       inputFile      Name of the input file.
+ * @param       outputFile     Name of the output file.
+ * @param       bitsUsedCopy   Vector of bits used for encoding.
+ * @param       dictionarySize Size of the encoding dictionary.
+ * @param       compressionRatio Compression ratio achieved.
+ * @param       executionTime  Total time taken for encoding and decoding.
+ * @return      None.
+ */
 void saveStatsToCSV(const string& inputFile, const string& outputFile, const vector<int>& bitsUsedCopy, 
                     int dictionarySize, double compressionRatio, double executionTime) {
     ofstream csvFile("stats.csv", ios::app);
@@ -174,8 +149,7 @@ void saveStatsToCSV(const string& inputFile, const string& outputFile, const vec
         return;
     }
 
-    csvFile << fixed << setprecision(6); // Formatação para precisão dos valores
-    
+    csvFile << fixed << setprecision(6); 
     csvFile << inputFile << "," << outputFile << ","
             << compressionRatio << "," 
             << executionTime << ","
@@ -192,7 +166,7 @@ void saveStatsToCSV(const string& inputFile, const string& outputFile, const vec
 int main(int argc, char *argv[]) {
     Trie encodingTrie, decodingTrie;
     string inputFile;
-    bool verboseMode = false;
+    bool verboseMode = false, statsMode = false;
 
     if (argc < 2) {
         cerr << "Erro: Caminho do arquivo de entrada é obrigatório." << endl;
@@ -201,8 +175,16 @@ int main(int argc, char *argv[]) {
 
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
-        if (arg == "-v") verboseMode = true;
-        else inputFile = arg;
+        if (arg == "-v") {
+            verboseMode = true;
+        } else if (arg == "-s") {
+            statsMode = true;
+        } else if (arg[0] == '-') { // Caso de flag desconhecida
+            cerr << "Erro: Flag desconhecida '" << arg << "'." << endl;
+            return 1;
+        } else {
+            inputFile = arg; // Assume que é o arquivo de entrada
+        }
     }
 
     if (inputFile.empty()) {
@@ -269,7 +251,7 @@ int main(int argc, char *argv[]) {
     int dictionarySize = encodingTrie.numBits; // Aproximação para o tamanho do dicionário
     double executionTime = chrono::duration<double>(endDecoding - start).count();
 
-    saveStatsToCSV(inputFile, "decompressed." + type, bitsUsedCopy, accumulate(bitsUsedCopy.begin(), bitsUsedCopy.end(), 0), compressionRatio, executionTime);
+    if(statsMode) saveStatsToCSV(inputFile, "decompressed." + type, bitsUsedCopy, accumulate(bitsUsedCopy.begin(), bitsUsedCopy.end(), 0), compressionRatio, executionTime);
 
     cout << "Decodificação salva em 'decompressed." << type << "'" << endl;
     return 0;
