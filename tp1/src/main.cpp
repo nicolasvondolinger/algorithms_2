@@ -163,10 +163,33 @@ string lzw_decoding(string& phrase, Trie& decodingTrie) {
     return ans; // Retorna a string decodificada.
 }
 
+void saveStatsToCSV(const string& inputFile, const string& outputFile, const vector<int>& bitsUsedCopy, 
+                    int dictionarySize, double compressionRatio, double executionTime) {
+    ofstream csvFile("stats.csv", ios::app);
+
+    if (!csvFile) {
+        cerr << "Erro ao criar o arquivo CSV de estatísticas." << endl;
+        return;
+    }
+
+    csvFile << fixed << setprecision(6); 
+    csvFile << inputFile << "," << outputFile << ","
+            << compressionRatio << "," 
+            << executionTime << ","
+            << dictionarySize << ","
+            << bitsUsedCopy[0] << ","
+            << bitsUsedCopy[1] << ","
+            << bitsUsedCopy[2] << ","
+            << bitsUsedCopy[3] << "\n";
+
+    csvFile.close();
+    cout << "Estatísticas salvas no arquivo 'stats.csv'" << endl;
+}
+
 int main(int argc, char *argv[]) {
     Trie encodingTrie, decodingTrie; 
     string inputFile;
-    bool verboseMode = false;
+    bool verboseMode = false, statsMode = false;
 
     if (argc < 2) {
         cerr << "Erro: Caminho do arquivo de entrada é obrigatório." << endl;
@@ -175,8 +198,16 @@ int main(int argc, char *argv[]) {
 
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
-        if (arg == "-v") verboseMode = true;
-        else inputFile = arg;
+        if (arg == "-v") {
+            verboseMode = true;
+        } else if (arg == "-s") {
+            statsMode = true;
+        } else if (arg[0] == '-') { // Caso de flag desconhecida
+            cerr << "Erro: Flag desconhecida '" << arg << "'." << endl;
+            return 1;
+        } else {
+            inputFile = arg; // Assume que é o arquivo de entrada
+        }
     }
 
     if (inputFile.empty()) {
@@ -221,9 +252,15 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    auto start = chrono::high_resolution_clock::now(); // Tempo inicial
+
     ans = lzw_encoding(temp, encodingTrie); writeBinaryFile(ans);
-    
+    int ansSize  = ans.size();
+    vector<int> bitsUsedCopy = bitsUsed;
+    auto endEncoding = chrono::high_resolution_clock::now();
     ans = lzw_decoding(ans, decodingTrie);
+
+    auto endDecoding = chrono::high_resolution_clock::now(); // Tempo final
 
     ofstream outFile("decompressed." + type);
     if (outFile) {
@@ -233,6 +270,16 @@ int main(int argc, char *argv[]) {
         cerr << "Erro ao abrir o arquivo para escrita." << endl;
     }
 
-    cout << "Decodificação salva em 'decompressed." << type << "'" << endl; 
+    // Cálculo das estatísticas
+    double originalSize = inputText.size() * 8;  // Tamanho em bits
+    double compressedSize = ansSize;
+    double compressionRatio = (originalSize - compressedSize) / originalSize;
+
+    int dictionarySize = encodingTrie.numBits; // Aproximação para o tamanho do dicionário
+    double executionTime = chrono::duration<double>(endDecoding - start).count();
+
+    if(statsMode) saveStatsToCSV(inputFile, "decompressed." + type, bitsUsedCopy, accumulate(bitsUsedCopy.begin(), bitsUsedCopy.end(), 0), compressionRatio, executionTime);
+
+    cout << "Decodificação salva em 'decompressed." << type << "'" << endl;
     return 0;
 }
