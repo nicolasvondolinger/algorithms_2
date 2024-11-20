@@ -1,0 +1,8 @@
+./tests/test12.txt,decompressed.txt,0.643184,0.718523,3841,0,0,0,3841
+./tests/test.txt,decompressed.txt,-0.166667,0.000247,7,0,0,0,7
+./tests/test.txt,decompressed.txt,-0.166667,0.000251,7,0,0,0,7
+./tests/test.txt,decompressed.txt,-0.166667,0.000261,7,0,0,0,7
+./tests/test.txt,decompressed.txt,-0.166667,0.000246,7,0,0,0,7
+./tests/test.txt,decompressed.txt,-0.166667,0.000245,7,0,0,0,7
+./tests/test.txt,decompressed.txt,-0.166667,0.000187,84,12,12,12,12
+./tests/test.txt,decompressed.txt,-0.166667,0.000189,84,12,12,12,12

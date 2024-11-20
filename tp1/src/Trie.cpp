@@ -1,24 +1,14 @@
 #include "../include/Trie.hpp"
 
-/*!
- * @brief       Construtor da classe Trie, inicializa a raiz e o número de bits padrão.
- */
 Trie::Trie(){
     root = new TrieNode();
     numBits = 9;
 }
 
-/*!
- * @brief       Destrutor da classe Trie, limpa a memória alocada para os nós.
- */
 Trie::~Trie(){
     deleteTrie(root);
 }
 
-/*!
- * @brief       Deleta recursivamente os nós da Trie para liberar memória.
- * @param       node        Ponteiro para o nó atual da Trie.
- */
 void Trie::deleteTrie(TrieNode* node){        
     if (node == nullptr) return;
     
@@ -29,18 +19,10 @@ void Trie::deleteTrie(TrieNode* node){
     delete node;       
 }
 
-/*!
- * @brief       Ajusta o número de bits usado na codificação.
- * @param       num         Novo número de bits.
- */
 void Trie::increaseNumBits(int num){
     numBits = num;
 }
 
-/*!
- * @brief       Configura a Trie inicial com base na escolha de modo (codificação ou decodificação).
- * @param       choice      0 para codificação, 1 para decodificação.
- */
 void Trie::setUpTrie(int choice){
     if(choice == 0){
         for(int i = 0; i < 256; i++){
@@ -61,11 +43,6 @@ void Trie::setUpTrie(int choice){
     }
 }
 
-/*!
- * @brief       Imprime todas as palavras presentes na Trie.
- * @param       node        Nó atual da Trie.
- * @param       str         Prefixo acumulado da palavra.
- */
 void Trie::printEachWord(TrieNode* node, string str){
     for(int i = 0; i < 2; i++){
         if(node->children[i] != nullptr) {
@@ -76,11 +53,6 @@ void Trie::printEachWord(TrieNode* node, string str){
     if(str != "" && node->id != "-1") cout << str << " " << node->id << endl;
 }
 
-/*!
- * @brief       Imprime todos os nós da Trie.
- * @param       node        Nó atual da Trie.
- * @param       level       Nível atual na Trie (para debug).
- */
 void Trie::printEachNode(TrieNode* node, int level){
     stack<TrieNode*> stack;
     stack.push(node);
@@ -96,11 +68,6 @@ void Trie::printEachNode(TrieNode* node, int level){
     }
 }
 
-/*!
- * @brief       Insere uma nova palavra na Trie.
- * @param       word        Palavra binária a ser inserida.
- * @param       id          Identificador associado à palavra.
- */
 void Trie::insert(string word, string id) {
     TrieNode* node = root; int i = 0;
     while (i < word.size()) {
@@ -163,10 +130,6 @@ void Trie::insert(string word, string id) {
     }
 }
 
-/*!
- * @brief       Remove uma palavra da Trie.
- * @param       word        Palavra binária a ser removida.
- */
 void Trie::remove(string word){
     TrieNode* node = root; int i = 0;
     while (i < word.size()) {
@@ -199,20 +162,11 @@ void Trie::remove(string word){
     }
 }
 
-/*!
- * @brief       Imprime a estrutura da Trie.
- * @param       choice      0 para imprimir palavras, 1 para imprimir nós.
- */
 void Trie::print(int choice){
     if(choice == 0) printEachWord(root, "");
     else printEachNode(root, 1);
 }
 
-/*!
- * @brief       Busca uma palavra binária na Trie.
- * @param       word        Palavra a ser buscada.
- * @return      Par indicando se foi encontrada e seu identificador.
- */
 pair<bool, string> Trie::search(string word) {
     TrieNode* node = root; int i = 0;
     while (i < word.size()) {
