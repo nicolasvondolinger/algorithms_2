@@ -9,7 +9,7 @@ novos trabalhos não estiverem sendo desenvolvidos no momento ou quando a discip
 
 ## Instruções para Execução dos Trabalhos
 
-Cada trabalho foi desenvolvido apenas com a linguagem C++. Para executar cada um deles, é necessário seguir o seguinte passo a passo:
+Os trabalhos são desenvolvidos apenas com a linguagem C++. Para executar cada um deles, é necessário ter as ferramentas instaladas em seu computador:
 
  - Instalar o compilador padrão (gcc/g++):
     
@@ -26,11 +26,7 @@ Cada trabalho foi desenvolvido apenas com a linguagem C++. Para executar cada um
      $ make
      $ make run
     
-     OBS: cada um dos trabalhos possuem diversos testes desenvolvidos para demonstrar a usabilidade e eficiência do código. É necessário seguir as instruções específicas de cada trabalho para ter o resultado esperado. Novos testes devem ser inseridos seguindo o mesmo modelo apresentado no repositório.
-
- - Limpar arquivos criados:
-
-     $ make clean
+Cada um dos trabalhos possuem diversos testes desenvolvidos para demonstrar a usabilidade e eficiência do código. É necessário seguir as instruções específicas de cada trabalho para ter o resultado esperado. Novos testes devem ser inseridos seguindo o mesmo modelo apresentado no repositório.
 
 ## Trabalho Prático 1 - Manipulação de Sequências
 
@@ -39,3 +35,18 @@ O trabalho desenvolvido tem como objetivo explorar a compressão de arquivos por
 Duas variações do LZW foram implementadas: uma com tamanho fixo de código, padrão de 12 bits, e outra com tamanho variável, que ajusta dinamicamente o número de bits conforme a expansão do dicionário. Ambas utilizam uma Trie compacta para armazenar as associações string-índice e índice-string, otimizando o processo tanto na compressão quanto na descompressão.
 
 Além do algoritmo principal, foram desenvolvidos scripts para capturar métricas de desempenho, como taxa de compressão, tempo de execução e consumo de memória, gerando relatórios detalhados com gráficos e tabelas. A implementação foi extensivamente testada com diferentes tipos de dados, incluindo arquivos de texto e imagens não comprimidas, validando a eficácia e robustez do método.
+
+Para executar esse programa em específico, siga o seguinte passo a passo:
+
+    - Executar o programa no terminal:
+
+            $ make run INPUT_FILE=./tests/test.txt
+            
+            $ make run INPUT_FILE=./tests/test.txt ARGS="-v"
+
+        Observe que, esse trabalho em específico pode ser executado de duas formas diferentes: com o número de códigos inseridos fixo (primeira opção) ou com o número variando (segunda opção). 
+        Para adicionar novos testes, basta inserir no diretório "./testes"
+
+     - Limpar arquivos de compilação criados:
+
+            $ make clean

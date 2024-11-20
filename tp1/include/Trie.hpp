@@ -11,20 +11,17 @@ class Trie{
         TrieNode* root;
         void printEachWord(TrieNode* node, string str);
         void printEachNode(TrieNode* node, int level);
-        string stringToBinary(string word);
-        void increaseInsertCount();
         void deleteTrie(TrieNode* node);
     public:
+        int numBits;
         Trie();
         ~Trie();
-        string insertCount = "0";
-        void insertEncoding(string word);
-        void insertDecoding(string word, string id);
+        void increaseNumBits(int num);
+        void insert(string word, string id);
         void print(int choice);
         void remove(string word);
-        void setUpTrieEncoding();
-        void setUpTrieDecoding();
+        void setUpTrie(int choice);
         pair<bool, string> search(string word);
 };
 
-#endif 
+#endif

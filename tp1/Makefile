@@ -1,6 +1,5 @@
-# Variáveis
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -Iinclude
+CXXFLAGS = -Wall -std=c++17 -Iinclude -w
 SRC_DIR = src
 INCLUDE_DIR = include
 OBJ_DIR = obj
@@ -30,7 +29,11 @@ $(BIN_DIR):
 
 # Executar o programa
 run: all
-	./$(TARGET)
+	@if [ "$(findstring -v,$(ARGS))" ]; then \
+		./$(TARGET) $(INPUT_FILE) -v; \
+	else \
+		./$(TARGET) $(INPUT_FILE); \
+	fi
 
 # Limpar arquivos compilados
 clean:
